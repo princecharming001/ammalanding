@@ -1,0 +1,76 @@
+========================================
+INSTRUCTIONS:
+========================================
+1. Go to: https://supabase.com/dashboard/project/chlfrkennmepvlqfsfzy/sql/new
+2. Select ALL text below (from DROP TABLE to end)
+3. Paste into Supabase SQL editor
+4. Click "Run"
+5. Wait 2-3 seconds
+6. Try uploading file again - it will work!
+========================================
+
+DROP TABLE IF EXISTS patient_files CASCADE;
+DROP TABLE IF EXISTS doctor_patients CASCADE;
+DROP TABLE IF EXISTS user_sessions CASCADE;
+DROP TABLE IF EXISTS user_notes CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+
+CREATE TABLE users (
+  email TEXT PRIMARY KEY,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  user_type TEXT NOT NULL CHECK (user_type IN ('patient', 'doctor')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE doctor_patients (
+  id SERIAL PRIMARY KEY,
+  doctor_email TEXT NOT NULL REFERENCES users(email) ON DELETE CASCADE,
+  patient_email TEXT NOT NULL REFERENCES users(email) ON DELETE CASCADE,
+  patient_name TEXT,
+  patient_avatar TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(doctor_email, patient_email)
+);
+
+CREATE TABLE patient_files (
+  id SERIAL PRIMARY KEY,
+  doctor_email TEXT NOT NULL REFERENCES users(email) ON DELETE CASCADE,
+  patient_email TEXT NOT NULL REFERENCES users(email) ON DELETE CASCADE,
+  file_type TEXT NOT NULL CHECK (file_type IN ('file', 'video')),
+  file_url TEXT NOT NULL,
+  file_name TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE user_sessions (
+  session_id TEXT PRIMARY KEY,
+  user_email TEXT NOT NULL REFERENCES users(email) ON DELETE CASCADE,
+  user_name TEXT NOT NULL,
+  user_type TEXT NOT NULL,
+  expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE doctor_patients DISABLE ROW LEVEL SECURITY;
+ALTER TABLE patient_files DISABLE ROW LEVEL SECURITY;
+ALTER TABLE user_sessions DISABLE ROW LEVEL SECURITY;
+
+GRANT ALL ON users TO anon, authenticated, service_role;
+GRANT ALL ON doctor_patients TO anon, authenticated, service_role;
+GRANT ALL ON patient_files TO anon, authenticated, service_role;
+GRANT ALL ON user_sessions TO anon, authenticated, service_role;
+GRANT ALL ON SEQUENCE doctor_patients_id_seq TO anon, authenticated, service_role;
+GRANT ALL ON SEQUENCE patient_files_id_seq TO anon, authenticated, service_role;
+
+INSERT INTO users (email, first_name, last_name, user_type) 
+VALUES 
+  ('patient1@test.com', 'John', 'Doe', 'patient'),
+  ('doctor1@test.com', 'Jane', 'Smith', 'doctor'),
+  ('anish.polakala@gmail.com', 'Anish', 'Polakala', 'patient'),
+  ('apolakala@berkeley.edu', 'Anish', 'Polakala', 'doctor')
+ON CONFLICT (email) DO NOTHING;
+
+SELECT 'SUCCESS! Database reset complete. Try uploading a file now!' as status;
+

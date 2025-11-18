@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #000; color: #0f0; }
+        button { padding: 10px; margin: 10px; font-size: 16px; }
+        #log { background: #111; padding: 20px; margin-top: 20px; border: 1px solid #0f0; }
+        .error { color: #f00; }
+        .success { color: #0f0; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Direct Database Test</h1>
+    <p>This tests ONLY the database insert, no storage.</p>
+    <button onclick="testInsert()">TEST INSERT</button>
+    <button onclick="clearLog()">Clear</button>
+    <div id="log"></div>
+
+    <script>
+        const { createClient } = supabase
+        const client = createClient(
+            'https://chlfrkennmepvlqfsfzy.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNobGZya2Vubm1lcHZscWZzZnp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5ODcxMzYsImV4cCI6MjA3ODU2MzEzNn0.z0E4pfRm6gl3gMxsdDgoXFnokSD9UyxdQi9zzBCBO4Y'
+        )
+
+        function log(msg, type = 'info') {
+            const div = document.getElementById('log')
+            const span = document.createElement('div')
+            span.className = type
+            span.textContent = msg
+            div.appendChild(span)
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = ''
+        }
+
+        async function testInsert() {
+            log('========================================')
+            log('🧪 Testing direct database insert...')
+            log('========================================')
+            
+            const testData = {
+                doctor_email: 'apolakala@berkeley.edu',
+                patient_email: 'anish.polakala@gmail.com',
+                file_type: 'file',
+                file_url: 'https://test-' + Date.now() + '.com/test.pdf',
+                file_name: 'HTML_DIRECT_TEST.pdf'
+            }
+            
+            log('📊 Inserting: ' + JSON.stringify(testData, null, 2))
+            
+            try {
+                const { data, error } = await client
+                    .from('patient_files')
+                    .insert([testData])
+                    .select()
+                
+                if (error) {
+                    log('========================================', 'error')
+                    log('❌ INSERT FAILED!', 'error')
+                    log('========================================', 'error')
+                    log('Error: ' + error.message, 'error')
+                    log('Code: ' + error.code, 'error')
+                    log('Details: ' + JSON.stringify(error.details), 'error')
+                    log('Hint: ' + error.hint, 'error')
+                    log('', 'error')
+                    log('🔥 THE DATABASE IS BLOCKING THIS!', 'error')
+                    log('Run ULTRA_SIMPLE_FIX.sql in Supabase', 'error')
+                } else {
+                    log('========================================', 'success')
+                    log('✅ INSERT WORKED!', 'success')
+                    log('========================================', 'success')
+                    log('Data: ' + JSON.stringify(data, null, 2), 'success')
+                    log('', 'success')
+                    log('🎉 DATABASE IS FINE!', 'success')
+                    log('The problem is NOT the database.', 'success')
+                    
+                    // Cleanup
+                    await client.from('patient_files').delete().eq('file_name', 'HTML_DIRECT_TEST.pdf')
+                    log('✅ Test data cleaned up', 'success')
+                }
+            } catch (ex) {
+                log('❌ Exception: ' + ex.message, 'error')
+                log('Stack: ' + ex.stack, 'error')
+            }
+        }
+    </script>
+</body>
+</html>
+

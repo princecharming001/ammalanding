@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Connection Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #00ff00;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #output {
+            background: #000;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #00ff00;
+            white-space: pre-wrap;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff0000; }
+        .info { color: #00aaff; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Supabase Database Test</h1>
+    <p>This directly tests your Supabase connection</p>
+    
+    <button onclick="testConnection()">1. Test Connection</button>
+    <button onclick="checkTables()">2. Check Tables</button>
+    <button onclick="testInsert()">3. Test Insert</button>
+    <button onclick="clearOutput()">Clear</button>
+    
+    <div id="output"></div>
+
+    <script>
+        const SUPABASE_URL = 'https://chlfrkennmepvlqfsfzy.supabase.co'
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNobGZya2Vubm1lcHZscWZzZnp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5ODcxMzYsImV4cCI6MjA3ODU2MzEzNn0.z0E4pfRm6gl3gMxsdDgoXFnokSD9UyxdQi9zzBCBO4Y'
+        
+        const { createClient } = supabase
+        const client = createClient(SUPABASE_URL, SUPABASE_KEY)
+        
+        function log(message, type = 'info') {
+            const output = document.getElementById('output')
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info'
+            output.innerHTML += `<span class="${className}">${message}</span>\n`
+            output.scrollTop = output.scrollHeight
+        }
+        
+        function clearOutput() {
+            document.getElementById('output').innerHTML = ''
+        }
+        
+        async function testConnection() {
+            log('========================================', 'info')
+            log('Testing Supabase Connection...', 'info')
+            log('========================================', 'info')
+            
+            try {
+                const { data, error } = await client.from('users').select('count')
+                
+                if (error) {
+                    log('❌ Connection failed!', 'error')
+                    log('Error: ' + error.message, 'error')
+                    log('Details: ' + JSON.stringify(error, null, 2), 'error')
+                } else {
+                    log('✅ Connection successful!', 'success')
+                    log('Connected to: ' + SUPABASE_URL, 'success')
+                }
+            } catch (err) {
+                log('❌ Exception: ' + err.message, 'error')
+            }
+        }
+        
+        async function checkTables() {
+            log('========================================', 'info')
+            log('Checking tables...', 'info')
+            log('========================================', 'info')
+            
+            const tables = ['users', 'doctor_patients', 'patient_files', 'user_sessions']
+            
+            for (const table of tables) {
+                try {
+                    const { data, error } = await client.from(table).select('count')
+                    
+                    if (error) {
+                        log(`❌ ${table}: ${error.message}`, 'error')
+                    } else {
+                        log(`✅ ${table}: exists`, 'success')
+                    }
+                } catch (err) {
+                    log(`❌ ${table}: ${err.message}`, 'error')
+                }
+            }
+        }
+        
+        async function testInsert() {
+            log('========================================', 'info')
+            log('Testing INSERT into patient_files...', 'info')
+            log('========================================', 'info')
+            
+            const testData = {
+                doctor_email: 'apolakala@berkeley.edu',
+                patient_email: 'anish.polakala@gmail.com',
+                file_type: 'file',
+                file_url: 'https://test.com/test-' + Date.now() + '.pdf',
+                file_name: 'HTML_TEST_FILE.pdf'
+            }
+            
+            log('Attempting insert with data:', 'info')
+            log(JSON.stringify(testData, null, 2), 'info')
+            
+            try {
+                const { data, error } = await client
+                    .from('patient_files')
+                    .insert([testData])
+                    .select()
+                
+                if (error) {
+                    log('========================================', 'error')
+                    log('❌ INSERT FAILED!', 'error')
+                    log('========================================', 'error')
+                    log('Error Message: ' + error.message, 'error')
+                    log('Error Code: ' + error.code, 'error')
+                    log('Error Details: ' + JSON.stringify(error.details, null, 2), 'error')
+                    log('Error Hint: ' + error.hint, 'error')
+                    log('\n', 'error')
+                    log('🔥 THIS IS THE PROBLEM!', 'error')
+                    log('Run NUCLEAR_FIX_RLS.sql in Supabase', 'error')
+                    log('========================================', 'error')
+                } else {
+                    log('========================================', 'success')
+                    log('✅ INSERT SUCCESSFUL!', 'success')
+                    log('========================================', 'success')
+                    log('Inserted data:', 'success')
+                    log(JSON.stringify(data, null, 2), 'success')
+                    log('\n', 'success')
+                    log('🎉 DATABASE WORKS!', 'success')
+                    log('Your app should work now!', 'success')
+                    log('========================================', 'success')
+                    
+                    // Clean up
+                    const { error: deleteError } = await client
+                        .from('patient_files')
+                        .delete()
+                        .eq('file_name', 'HTML_TEST_FILE.pdf')
+                    
+                    if (!deleteError) {
+                        log('✅ Test data cleaned up', 'success')
+                    }
+                }
+            } catch (err) {
+                log('❌ Exception: ' + err.message, 'error')
+                log('Stack: ' + err.stack, 'error')
+            }
+        }
+        
+        // Auto-run first test on load
+        window.onload = () => {
+            log('🚀 Supabase Test Tool Loaded', 'info')
+            log('Click buttons above to run tests', 'info')
+            log('\n')
+        }
+    </script>
+</body>
+</html>
+
