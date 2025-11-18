@@ -40,7 +40,7 @@ A professional, minimalist landing page for an AI-powered healthcare platform wi
 ### Installation & Running
 
 ```bash
-# Install dependencies
+# Install dependencies (first time only)
 npm install
 
 # Start development server
@@ -54,6 +54,29 @@ npm run preview
 ```
 
 Your app will be running at `http://localhost:5173`
+
+### Deploying to GitHub Pages
+
+This project is configured to deploy automatically to GitHub Pages:
+
+```bash
+# Build, commit, and push to GitHub Pages (one command!)
+npm run deploy:pages
+```
+
+**What this does:**
+1. Builds the production version of your app
+2. Copies the build files to the repository root
+3. Commits the changes with message "Deploy: GitHub Pages update"
+4. Pushes to the `main` branch
+
+**GitHub Pages will automatically update** within 1-2 minutes after pushing.
+
+**Your live site:** `https://princecharming001.github.io/ammalanding/`
+
+**Note:** Make sure you have:
+- A git remote named `origin` pointing to your GitHub repo
+- GitHub Pages enabled in repo settings (Settings → Pages → Source: main branch, / root folder)
 
 ## Design Features
 
