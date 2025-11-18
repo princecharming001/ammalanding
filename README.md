@@ -57,26 +57,36 @@ Your app will be running at `http://localhost:5173`
 
 ### Deploying to GitHub Pages
 
-This project is configured to deploy automatically to GitHub Pages:
+This project uses **GitHub Actions** for automatic deployment following [official GitHub Pages documentation](https://docs.github.com/en/pages).
+
+**Automatic Deployment:**
+Every push to `main` branch automatically triggers a build and deploy workflow.
 
 ```bash
-# Build, commit, and push to GitHub Pages (one command!)
-npm run deploy:pages
+# Make your changes, commit, and push
+git add .
+git commit -m "Your changes"
+git push origin main
+
+# Or use the npm script
+npm run deploy
 ```
 
-**What this does:**
-1. Builds the production version of your app
-2. Copies the build files to the repository root
-3. Commits the changes with message "Deploy: GitHub Pages update"
-4. Pushes to the `main` branch
-
-**GitHub Pages will automatically update** within 1-2 minutes after pushing.
+**What happens automatically:**
+1. GitHub Actions detects the push to `main`
+2. Installs dependencies and builds your app (`npm ci && npm run build`)
+3. Deploys the `dist/` folder to GitHub Pages
+4. Your site updates within 1-2 minutes
 
 **Your live site:** `https://princecharming001.github.io/ammalanding/`
 
-**Note:** Make sure you have:
-- A git remote named `origin` pointing to your GitHub repo
-- GitHub Pages enabled in repo settings (Settings → Pages → Source: main branch, / root folder)
+**Setup Requirements:**
+1. Go to your repo **Settings → Pages**
+2. Under **Source**, select: **GitHub Actions**
+3. The workflow file (`.github/workflows/deploy.yml`) handles the rest automatically
+
+**Manual Deployment:**
+You can also trigger deployment manually from the Actions tab in your GitHub repo.
 
 ## Design Features
 
