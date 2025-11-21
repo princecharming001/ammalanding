@@ -10,7 +10,7 @@ const GOOGLE_CLIENT_ID = "158294585814-rjagi60pklm8f2g5b3pertvlsqei53ca.apps.goo
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter basename="/ammalanding">
+    <BrowserRouter>
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
         <App />
       </GoogleOAuthProvider>
