@@ -6,7 +6,7 @@ import Profile from './components/Profile'
 import PatientProfile from './pages/PatientProfile'
 import DoctorProfile from './pages/DoctorProfile'
 import PatientFilesPage from './pages/PatientFilesPage'
-const ammaLogo = '/images/Black Minimalist Letter A Logo (2).png'
+const ammaLogo = '/images/Black Elephant Flat Illustrative Company Logo.png'
 import './App.css'
 
 
