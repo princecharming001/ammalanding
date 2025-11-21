@@ -160,22 +160,26 @@ function HomePage() {
         <div className="feature-showcase">
           <div className="feature-large">
             <div className="feature-visual">
-              <div className="mock-dashboard">
-                <div className="mock-header">Patient Dashboard</div>
-                <div className="mock-metrics">
-                  <div className="mock-metric">
-                    <div className="metric-label">Heart Rate</div>
-                    <div className="metric-value">72 bpm</div>
-                  </div>
-                  <div className="mock-metric">
-                    <div className="metric-label">Blood Pressure</div>
-                    <div className="metric-value">120/80</div>
-                  </div>
-                  <div className="mock-metric">
-                    <div className="metric-label">O2 Saturation</div>
-                    <div className="metric-value">98%</div>
-                  </div>
-                </div>
+              <div className="video-container" style={{
+                borderRadius: '12px',
+                overflow: 'hidden',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                background: '#000'
+              }}>
+                <video 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    display: 'block'
+                  }}
+                >
+                  <source src="/images/20251121_0810_01kakjqdsse5jb6f3mdz9p3j0t.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
               </div>
             </div>
             <div className="feature-text">
