@@ -184,7 +184,7 @@ function HomePage() {
           <div className="feature-large reverse">
             <div className="feature-visual">
               <img 
-                src="/images/Screenshot 2025-11-21 at 5.23.58 PM.png"
+                src="/images/Screenshot 2025-11-21 at 5.50.24 PM.png"
                 alt="Daily Follow-Up Animations"
                 className="feature-image"
               />
@@ -202,7 +202,7 @@ function HomePage() {
           <div className="feature-large">
             <div className="feature-visual">
               <img 
-                src="/images/Screenshot 2025-11-21 at 5.33.08 PM.png"
+                src="/images/Screenshot 2025-11-21 at 5.50.39 PM.png"
                 alt="Real-Time AI Q&A"
                 className="feature-image"
               />
