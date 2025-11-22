@@ -160,27 +160,16 @@ function HomePage() {
         <div className="feature-showcase">
           <div className="feature-large">
             <div className="feature-visual">
-              <div className="video-container" style={{
-                borderRadius: '12px',
-                overflow: 'hidden',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-                background: '#000'
-              }}>
-                <video 
-                  autoPlay 
-                  loop 
-                  muted 
-                  playsInline
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    display: 'block'
-                  }}
-                >
-                  <source src="/images/20251121_0810_01kakjqdsse5jb6f3mdz9p3j0t.mp4" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
+              <video 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+                className="feature-video"
+              >
+                <source src="/images/20251121_0810_01kakjqdsse5jb6f3mdz9p3j0t.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </div>
             <div className="feature-text">
               <h3>Instant Personalized Videos</h3>
@@ -194,22 +183,11 @@ function HomePage() {
 
           <div className="feature-large reverse">
             <div className="feature-visual">
-              <div style={{
-                borderRadius: '12px',
-                overflow: 'hidden',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-                background: '#fff'
-              }}>
-                <img 
-                  src="/images/Screenshot 2025-11-21 at 5.23.58 PM.png"
-                  alt="Daily Follow-Up Animations"
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    display: 'block'
-                  }}
-                />
-              </div>
+              <img 
+                src="/images/Screenshot 2025-11-21 at 5.23.58 PM.png"
+                alt="Daily Follow-Up Animations"
+                className="feature-image"
+              />
             </div>
             <div className="feature-text">
               <h3>Daily Follow-Up Animations</h3>
@@ -223,22 +201,11 @@ function HomePage() {
 
           <div className="feature-large">
             <div className="feature-visual">
-              <div style={{
-                borderRadius: '12px',
-                overflow: 'hidden',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-                background: '#fff'
-              }}>
-                <img 
-                  src="/images/Screenshot 2025-11-21 at 5.33.08 PM.png"
-                  alt="Real-Time AI Q&A"
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    display: 'block'
-                  }}
-                />
-              </div>
+              <img 
+                src="/images/Screenshot 2025-11-21 at 5.33.08 PM.png"
+                alt="Real-Time AI Q&A"
+                className="feature-image"
+              />
             </div>
             <div className="feature-text">
               <h3>Real-Time AI Q&A</h3>
