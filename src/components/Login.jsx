@@ -167,11 +167,11 @@ function Login() {
               border: '1px solid rgba(232, 121, 249, 0.1)'
             }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#A855F7' }}>200+</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#A855F7' }}>100+</div>
                 <div style={{ fontSize: '0.75rem', color: '#999', marginTop: '0.25rem' }}>Clinicians</div>
               </div>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#A855F7' }}>25K+</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#A855F7' }}>5000+</div>
                 <div style={{ fontSize: '0.75rem', color: '#999', marginTop: '0.25rem' }}>Videos</div>
               </div>
               <div style={{ textAlign: 'center' }}>
