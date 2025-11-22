@@ -194,13 +194,21 @@ function HomePage() {
 
           <div className="feature-large reverse">
             <div className="feature-visual">
-              <div className="mock-dashboard">
-                <div className="mock-header">AI Analysis Results</div>
-                <div className="mock-analysis">
-                  <div className="analysis-item">✓ Treatment adherence: 94%</div>
-                  <div className="analysis-item">⚠ Risk factors detected: 2</div>
-                  <div className="analysis-item">📊 Progress: On track</div>
-                </div>
+              <div style={{
+                borderRadius: '12px',
+                overflow: 'hidden',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                background: '#fff'
+              }}>
+                <img 
+                  src="/images/Screenshot 2025-11-21 at 5.23.58 PM.png"
+                  alt="Daily Follow-Up Animations"
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    display: 'block'
+                  }}
+                />
               </div>
             </div>
             <div className="feature-text">
@@ -215,12 +223,21 @@ function HomePage() {
 
           <div className="feature-large">
             <div className="feature-visual">
-              <div className="mock-dashboard">
-                <div className="mock-header">Virtual Consultation</div>
-                <div className="mock-video">
-                  <div className="video-placeholder">📹 Video Call Active</div>
-                  <div className="video-controls">🎤 Mic | 📷 Camera | 🔊 Audio</div>
-                </div>
+              <div style={{
+                borderRadius: '12px',
+                overflow: 'hidden',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                background: '#fff'
+              }}>
+                <img 
+                  src="/images/Screenshot 2025-11-21 at 5.33.08 PM.png"
+                  alt="Real-Time AI Q&A"
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    display: 'block'
+                  }}
+                />
               </div>
             </div>
             <div className="feature-text">
