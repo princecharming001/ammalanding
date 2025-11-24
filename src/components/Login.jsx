@@ -8,6 +8,43 @@ import './Login.css'
 
 function Login() {
   const navigate = useNavigate()
+  const [showBetaModal, setShowBetaModal] = useState(true)
+  const [demoName, setDemoName] = useState('')
+  const [demoEmail, setDemoEmail] = useState('')
+  const [demoOrganization, setDemoOrganization] = useState('')
+  const [demoSubmitting, setDemoSubmitting] = useState(false)
+  
+  const handleDemoRequest = async () => {
+    if (!demoEmail || !demoName) {
+      alert('Please enter your name and email')
+      return
+    }
+    
+    setDemoSubmitting(true)
+    try {
+      const { error } = await supabase
+        .from('demo_requests')
+        .insert([{
+          name: demoName,
+          email: demoEmail,
+          organization: demoOrganization,
+          requested_at: new Date().toISOString()
+        }])
+      
+      if (error) {
+        console.error('Error submitting demo request:', error)
+        alert('Error submitting demo request. Please try again.')
+      } else {
+        alert('✅ Demo request submitted! We\'ll be in touch soon.')
+        setShowBetaModal(false)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Error submitting demo request.')
+    } finally {
+      setDemoSubmitting(false)
+    }
+  }
   
   const createOrUpdateUser = async (email, name, userType, profilePicture = null) => {
     try {
@@ -134,6 +171,255 @@ function Login() {
 
   return (
     <div className="login-page">
+      {/* Beta Access Modal */}
+      {showBetaModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.7)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999,
+          padding: '1rem'
+        }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+            borderRadius: '24px',
+            padding: '3rem 2.5rem',
+            maxWidth: '520px',
+            width: '100%',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            border: '1px solid rgba(124, 58, 237, 0.2)',
+            position: 'relative',
+            animation: 'modalSlideIn 0.4s ease-out'
+          }}>
+            {/* Gradient accent bar */}
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 'calc(100% - 2px)',
+              height: '6px',
+              background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+              borderRadius: '24px 24px 0 0'
+            }} />
+            
+            {/* Logo */}
+            <div style={{
+              width: '80px',
+              height: '80px',
+              margin: '0 auto 1.5rem',
+              borderRadius: '50%',
+              background: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 8px 24px rgba(124, 58, 237, 0.3)',
+              border: '3px solid rgba(124, 58, 237, 0.2)'
+            }}>
+              <img 
+                src="/images/Black Elephant Flat Illustrative Company Logo.png" 
+                alt="Amma Logo" 
+                style={{ 
+                  width: '60px', 
+                  height: '60px',
+                  objectFit: 'contain'
+                }} 
+              />
+            </div>
+
+            {/* Title */}
+            <h2 style={{
+              fontSize: '2rem',
+              fontWeight: '800',
+              textAlign: 'center',
+              marginBottom: '1rem',
+              background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              Beta Access Only
+            </h2>
+
+            {/* Message */}
+            <p style={{
+              fontSize: '1.125rem',
+              color: '#64748b',
+              textAlign: 'center',
+              lineHeight: '1.7',
+              marginBottom: '2rem'
+            }}>
+              We're currently in private beta with select healthcare providers.
+              <br />
+              <strong style={{ color: '#1f2937' }}>Launching publicly soon!</strong>
+            </p>
+
+            {/* Stats */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr 1fr',
+              gap: '1rem',
+              marginBottom: '2rem',
+              padding: '1.5rem',
+              background: 'rgba(124, 58, 237, 0.05)',
+              borderRadius: '12px',
+              border: '1px solid rgba(124, 58, 237, 0.1)'
+            }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#7c3aed' }}>100+</div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.25rem' }}>Clinicians</div>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#7c3aed' }}>5000+</div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.25rem' }}>Videos</div>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#7c3aed' }}>50%</div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.25rem' }}>Decrease in appointment lengths</div>
+              </div>
+            </div>
+
+            {/* Demo Request Form */}
+            <div style={{ marginBottom: '1.5rem' }}>
+              <input
+                type="text"
+                placeholder="Your Name *"
+                value={demoName}
+                onChange={(e) => setDemoName(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.875rem',
+                  marginBottom: '0.75rem',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '10px',
+                  fontSize: '0.95rem',
+                  fontFamily: 'inherit',
+                  transition: 'all 0.2s'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#7c3aed'}
+                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+              />
+              <input
+                type="email"
+                placeholder="Email Address *"
+                value={demoEmail}
+                onChange={(e) => setDemoEmail(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.875rem',
+                  marginBottom: '0.75rem',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '10px',
+                  fontSize: '0.95rem',
+                  fontFamily: 'inherit',
+                  transition: 'all 0.2s'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#7c3aed'}
+                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+              />
+              <input
+                type="text"
+                placeholder="Organization / Practice (optional)"
+                value={demoOrganization}
+                onChange={(e) => setDemoOrganization(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.875rem',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '10px',
+                  fontSize: '0.95rem',
+                  fontFamily: 'inherit',
+                  transition: 'all 0.2s'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#7c3aed'}
+                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+              />
+            </div>
+
+            {/* Buttons */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <button
+                onClick={handleDemoRequest}
+                disabled={demoSubmitting}
+                style={{
+                  padding: '1rem 2rem',
+                  background: demoSubmitting ? '#9ca3af' : 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+                  border: 'none',
+                  borderRadius: '12px',
+                  color: 'white',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  cursor: demoSubmitting ? 'not-allowed' : 'pointer',
+                  boxShadow: '0 4px 16px rgba(124, 58, 237, 0.3)',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => !demoSubmitting && (e.target.style.transform = 'translateY(-2px)')}
+                onMouseLeave={(e) => !demoSubmitting && (e.target.style.transform = 'translateY(0)')}
+              >
+                {demoSubmitting ? 'Submitting...' : '📅 Request Demo Access'}
+              </button>
+              
+              <button
+                onClick={() => setShowBetaModal(false)}
+                style={{
+                  padding: '1rem 2rem',
+                  background: 'white',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '12px',
+                  color: '#64748b',
+                  fontSize: '0.95rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.borderColor = '#7c3aed'
+                  e.target.style.color = '#7c3aed'
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.borderColor = '#e5e7eb'
+                  e.target.style.color = '#64748b'
+                }}
+              >
+                Continue to Login
+              </button>
+            </div>
+
+            {/* Footer note */}
+            <p style={{
+              fontSize: '0.875rem',
+              color: '#9ca3af',
+              textAlign: 'center',
+              marginTop: '1.5rem',
+              paddingTop: '1.5rem',
+              borderTop: '1px solid #f0f0f0'
+            }}>
+              Interested in early access? Request a demo to learn more.
+            </p>
+          </div>
+        </div>
+      )}
+      
+      <style>{`
+        @keyframes modalSlideIn {
+          from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+      `}</style>
+      
       <button className="back-button" onClick={() => navigate('/')}>
         ← Back to Home
       </button>

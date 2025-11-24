@@ -33,6 +33,7 @@ VITE_EPIC_CLIENT_ID=your_plasma_fhir_client_id
 4. Copy and paste the contents of `setup/sql/FINAL_DATABASE_SETUP.sql`
 5. Click **Run** to execute the script
 6. (Optional) Run `setup/sql/DEMO_DOCTOR_SETUP.sql` to create demo accounts
+7. Run `setup/sql/CREATE_DEMO_REQUESTS_TABLE.sql` to enable beta access form
 
 ## Step 4: Configure Google OAuth
 

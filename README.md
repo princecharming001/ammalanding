@@ -8,6 +8,7 @@ Amma Health connects to Epic Systems via Plasma FHIR to pull patient medical dat
 
 ### Key Features
 
+- **Beta Access Modal**: Demo request form on login page to capture leads
 - **Doctor Dashboard**: Manage patients, view roster, and add new patients
 - **Patient Portal**: View personalized diagnosis videos, chat with AI assistant, and access recovery plans
 - **Epic Integration**: Pull patient data from Epic EHR via Plasma FHIR
