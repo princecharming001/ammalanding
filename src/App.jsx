@@ -33,13 +33,32 @@ function HomePage() {
       return
     }
     setSubmitting(true)
-    // Simple form submission - just show success
-    setTimeout(() => {
-      alert('🎉 Thank you for joining the waitlist! We\'ll be in touch soon.')
-      setFormData({ clinicName: '', doctorName: '', phone: '', email: '' })
-      setFormOpen(false)
+    try {
+      const { supabase } = await import('./utils/supabaseClient')
+      const { error } = await supabase
+        .from('demo_requests')
+        .insert([{
+          name: formData.doctorName,
+          email: formData.email,
+          organization: formData.clinicName,
+          phone: formData.phone,
+          requested_at: new Date().toISOString()
+        }])
+      
+      if (error) {
+        console.error('Error submitting waitlist:', error)
+        alert('Error submitting. Please try again.')
+      } else {
+        alert('🎉 Thank you for joining the waitlist! We\'ll be in touch soon.')
+        setFormData({ clinicName: '', doctorName: '', phone: '', email: '' })
+        setFormOpen(false)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Error submitting. Please try again.')
+    } finally {
       setSubmitting(false)
-    }, 500)
+    }
   }
 
   const toggleFaq = (index) => {
