@@ -376,7 +376,7 @@ function Login() {
               </button>
               
               <button
-                onClick={() => setShowBetaModal(false)}
+                onClick={() => navigate('/')}
                 style={{
                   padding: '0.75rem 1.5rem',
                   background: 'transparent',
@@ -399,7 +399,7 @@ function Login() {
                   e.target.style.color = '#525252'
                 }}
               >
-                Continue to Login
+                ← Go Back to Home
               </button>
             </div>
           </div>

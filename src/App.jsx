@@ -56,6 +56,7 @@ function HomePage() {
         </div>
         <div className="nav-links">
           <button className="nav-link" onClick={() => navigate('/contact')}>Contact</button>
+          <button className="nav-cta" onClick={() => navigate('/login')}>Get Started</button>
         </div>
       </nav>
 
