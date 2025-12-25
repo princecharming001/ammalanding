@@ -4,9 +4,96 @@ import { supabase } from '../utils/supabaseClient'
 import { getCurrentSession, logout } from '../utils/sessionManager'
 import { isValidPatientKey, unformatPatientKey, formatPatientKey } from '../utils/keyGenerator'
 import EpicConnect from '../components/EpicConnect'
-import { FiUsers, FiLogOut, FiPlus, FiSearch, FiFileText, FiUser, FiCalendar, FiActivity, FiClock } from 'react-icons/fi'
-import { MdMedicalServices } from 'react-icons/md'
+import { FiUsers, FiLogOut, FiPlus, FiSearch, FiFileText, FiUser, FiSettings, FiX } from 'react-icons/fi'
 import '../components/Profile.css'
+
+// Demo patients with diverse names and realistic profile pictures
+const DEMO_PATIENTS = [
+  {
+    email: 'anish.polakala@example.com',
+    name: 'Anish Polakala',
+    patientKey: '630651557',
+    profilePicture: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    email: 'priya.venkatesh@example.com',
+    name: 'Priya Venkatesh',
+    patientKey: '847291536',
+    profilePicture: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    email: 'kwame.asante@example.com',
+    name: 'Kwame Asante',
+    patientKey: '562839147',
+    profilePicture: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    email: 'mei.tanaka@example.com',
+    name: 'Mei Tanaka',
+    patientKey: '391847562',
+    profilePicture: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    email: 'adaeze.okonkwo@example.com',
+    name: 'Adaeze Okonkwo',
+    patientKey: '725183946',
+    profilePicture: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    email: 'raj.malhotra@example.com',
+    name: 'Raj Malhotra',
+    patientKey: '483926175',
+    profilePicture: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    email: 'hana.kim@example.com',
+    name: 'Hana Kim',
+    patientKey: '619284753',
+    profilePicture: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    email: 'chidi.eze@example.com',
+    name: 'Chidi Eze',
+    patientKey: '258374916',
+    profilePicture: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    email: 'sunita.sharma@example.com',
+    name: 'Sunita Sharma',
+    patientKey: '847162935',
+    profilePicture: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    email: 'tunde.williams@example.com',
+    name: 'Tunde Williams',
+    patientKey: '936582714',
+    profilePicture: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    email: 'yuki.nakamura@example.com',
+    name: 'Yuki Nakamura',
+    patientKey: '174629385',
+    profilePicture: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    email: 'amara.diallo@example.com',
+    name: 'Amara Diallo',
+    patientKey: '593847261',
+    profilePicture: 'https://images.unsplash.com/photo-1507152832244-10d45c7eda57?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    email: 'vikram.patel@example.com',
+    name: 'Vikram Patel',
+    patientKey: '628174953',
+    profilePicture: 'https://images.unsplash.com/photo-1542178243-bc20204b769f?w=150&h=150&fit=crop&crop=face'
+  },
+  {
+    email: 'nneka.uche@example.com',
+    name: 'Nneka Uche',
+    patientKey: '481726395',
+    profilePicture: 'https://images.unsplash.com/photo-1523824921871-d6f1a15151f1?w=150&h=150&fit=crop&crop=face'
+  }
+]
 
 function DoctorProfile() {
   const navigate = useNavigate()
@@ -24,24 +111,16 @@ function DoctorProfile() {
   }, [])
 
   const checkSessionAndLoadData = async () => {
-    console.log('👨‍⚕️ DoctorProfile: Checking session...')
-    
     try {
       const session = await getCurrentSession()
-      console.log('👨‍⚕️ Session data:', session)
-      
       if (!session || session.userType !== 'doctor') {
-        console.log('❌ No valid doctor session')
         alert('⚠️ No active session found! Please log in.')
         navigate('/login')
         return
       }
       
-      console.log('✅ Valid doctor session found')
       setUserEmail(session.email)
       setProfilePicture(session.profilePicture || '')
-      
-      // Load proper name from database
       await loadDoctorName(session.email, session.name)
       loadPatients(session.email)
     } catch (error) {
@@ -74,8 +153,6 @@ function DoctorProfile() {
   }
 
   const loadPatients = async (docEmail) => {
-    console.log('🔍 Loading patients for doctor:', docEmail)
-    
     try {
       const { data: patientLinks, error: linkError } = await supabase
         .from('doctor_patients')
@@ -84,75 +161,70 @@ function DoctorProfile() {
 
       if (linkError) {
         console.error('Error loading patient links:', linkError)
+        // Still show demo patients even if there's an error
+        setPatients(DEMO_PATIENTS)
         setLoading(false)
         return
       }
 
-      console.log('📋 Patient links found:', patientLinks)
+      let patientsWithInfo = []
 
-      if (!patientLinks || patientLinks.length === 0) {
-        console.log('No patients found for this doctor')
-        setPatients([])
-        setLoading(false)
-        return
-      }
-
-      // Fetch patient details with profile pictures
-      const patientEmails = patientLinks.map(link => link.patient_email)
-      
-      // Try to fetch with profile_picture, if it fails, fetch without it
-      let patientData = null
-      let patientError = null
-      
-      try {
-        const result = await supabase
-          .from('users')
-          .select('email, first_name, last_name, profile_picture')
-          .in('email', patientEmails)
-          .eq('user_type', 'patient')
+      if (patientLinks && patientLinks.length > 0) {
+        const patientEmails = patientLinks.map(link => link.patient_email)
         
-        patientData = result.data
-        patientError = result.error
-      } catch (err) {
-        // If profile_picture column doesn't exist, try without it
-        console.log('⚠️ Trying to fetch patients without profile_picture column...')
-        const result = await supabase
-          .from('users')
-          .select('email, first_name, last_name')
-          .in('email', patientEmails)
-          .eq('user_type', 'patient')
-        
-        patientData = result.data
-        patientError = result.error
-      }
-
-      if (patientError) {
-        console.error('Error loading patient data:', patientError)
-      }
-
-      const patientsWithInfo = patientLinks.map(link => {
-        const patientInfo = patientData?.find(p => p.email === link.patient_email)
-        const firstName = patientInfo?.first_name || link.patient_email.split('@')[0]
-        const lastName = patientInfo?.last_name || ''
-        const fullName = `${firstName} ${lastName}`.trim()
-        const profilePic = patientInfo?.profile_picture || null
-        
-        console.log(`Patient ${link.patient_email} profile picture:`, profilePic)
-        
-        return {
-          email: link.patient_email,
-          name: fullName || link.patient_email,
-          patientKey: link.patient_key,
-          profilePicture: profilePic
+        let patientData = null
+        try {
+          const result = await supabase
+            .from('users')
+            .select('email, first_name, last_name, profile_picture')
+            .in('email', patientEmails)
+            .eq('user_type', 'patient')
+          patientData = result.data
+        } catch (err) {
+          const result = await supabase
+            .from('users')
+            .select('email, first_name, last_name')
+            .in('email', patientEmails)
+            .eq('user_type', 'patient')
+          patientData = result.data
         }
-      })
 
-      console.log('👥 Loaded patients with profile pictures:', patientsWithInfo)
-      setPatients(patientsWithInfo)
+        patientsWithInfo = patientLinks.map(link => {
+          const patientInfo = patientData?.find(p => p.email === link.patient_email)
+          const firstName = patientInfo?.first_name || link.patient_email.split('@')[0]
+          const lastName = patientInfo?.last_name || ''
+          const fullName = `${firstName} ${lastName}`.trim()
+          const profilePic = patientInfo?.profile_picture || null
+          
+          return {
+            email: link.patient_email,
+            name: fullName || link.patient_email,
+            patientKey: link.patient_key,
+            profilePicture: profilePic
+          }
+        })
+      }
+
+      // Merge with demo patients, avoiding duplicates
+      const realEmails = new Set(patientsWithInfo.map(p => p.email))
+      const demoToAdd = DEMO_PATIENTS.filter(demo => !realEmails.has(demo.email))
+      
+      // Put Anish Polakala first, then real patients, then other demo patients
+      const anish = DEMO_PATIENTS.find(p => p.name === 'Anish Polakala')
+      const otherDemo = demoToAdd.filter(p => p.name !== 'Anish Polakala')
+      
+      const finalPatients = [
+        ...(anish && !realEmails.has(anish.email) ? [anish] : []),
+        ...patientsWithInfo.filter(p => p.email !== 'anish.polakala@example.com'),
+        ...otherDemo
+      ]
+
+      setPatients(finalPatients)
     } catch (error) {
       console.error('Error in loadPatients:', error)
+      // Show demo patients on error
+      setPatients(DEMO_PATIENTS)
     }
-    
     setLoading(false)
   }
 
@@ -163,14 +235,12 @@ function DoctorProfile() {
     }
 
     const cleanKey = unformatPatientKey(patientKey)
-
     if (!isValidPatientKey(cleanKey)) {
       alert('❌ Invalid Patient ID format. Please check and try again.')
       return
     }
 
     try {
-      // Find patient by key
       const { data: patientData, error: patientError } = await supabase
         .from('users')
         .select('email, first_name, last_name, patient_key, profile_picture')
@@ -183,7 +253,6 @@ function DoctorProfile() {
         return
       }
 
-      // Check if already linked
       const { data: existingLink } = await supabase
         .from('doctor_patients')
         .select('*')
@@ -198,7 +267,6 @@ function DoctorProfile() {
         return
       }
 
-      // Create link
       const { error: insertError } = await supabase
         .from('doctor_patients')
         .insert([{
@@ -241,587 +309,469 @@ function DoctorProfile() {
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #A855F7 0%, #E879F9 50%, #F472B6 100%)'
+        background: '#FAFAFA'
       }}>
-        <div style={{ textAlign: 'center', color: 'white' }}>
-          <FiActivity size={48} style={{ animation: 'spin 2s linear infinite' }} />
-          <p style={{ marginTop: '1rem', fontSize: '1.1rem' }}>Loading dashboard...</p>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            border: '3px solid #E5E5E5',
+            borderTopColor: '#0A0A0A',
+            borderRadius: '50%',
+            animation: 'spin 0.8s linear infinite',
+            margin: '0 auto 1rem'
+          }} />
+          <p style={{ color: '#525252', fontSize: '0.875rem' }}>Loading dashboard...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#ffffff' }}>
-      {/* Professional Header */}
-      <div style={{
-        background: 'linear-gradient(135deg, #7c3aed 0%, #9333ea 100%)',
-        boxShadow: '0 2px 8px rgba(124, 58, 237, 0.15)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+    <div style={{ minHeight: '100vh', background: '#FAFAFA' }}>
+      {/* Minimal Header */}
+      <header style={{
+        background: '#FFFFFF',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100
       }}>
         <div style={{ 
-          maxWidth: '1400px', 
+          maxWidth: '1200px', 
           margin: '0 auto', 
-          padding: '1.5rem 2rem',
+          padding: '1rem 2rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between'
         }}>
-          {/* Left side - Logo and Title */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <img 
               src="/images/Black Elephant Flat Illustrative Company Logo.png" 
-              alt="Amma Logo" 
-              style={{ height: '50px', width: '50px', objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
+              alt="Amma" 
+              style={{ height: '32px', width: '32px', objectFit: 'contain' }}
             />
             <div>
               <h1 style={{ 
                 margin: 0, 
-                fontSize: '1.5rem', 
-                fontWeight: '700',
-                color: 'white',
+                fontSize: '1.25rem', 
+                fontWeight: '600',
+                color: '#0A0A0A',
                 letterSpacing: '-0.02em'
               }}>
                 Clinical Dashboard
               </h1>
-              <p style={{ margin: 0, fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.9)', marginTop: '0.25rem' }}>
-                Welcome back, Dr. {userName}
+              <p style={{ margin: 0, fontSize: '0.8125rem', color: '#A3A3A3' }}>
+                Welcome, Dr. {userName.split(' ')[0]}
               </p>
             </div>
           </div>
 
-          {/* Right side - Profile and Actions */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            {/* Epic Connect */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <EpicConnect doctorEmail={userEmail} />
-
-            {/* Profile Picture */}
-            <div style={{ 
-              width: '45px', 
-              height: '45px', 
-              borderRadius: '50%', 
-              overflow: 'hidden',
-              border: '2px solid rgba(255, 255, 255, 0.3)',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)'
-            }}>
-              {profilePicture ? (
-                <img 
-                  src={profilePicture} 
-                  alt={userName}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              ) : (
-                <div style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <FiUser size={24} color="white" />
-                </div>
-              )}
-            </div>
-
-            {/* Logout Button */}
-            <button 
-              onClick={handleLogout}
+            
+            <button
+              onClick={() => navigate('/doctor/settings')}
               style={{
-                padding: '0.625rem 1.25rem',
-                background: 'rgba(255, 255, 255, 0.15)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '10px',
-                color: 'white',
-                fontWeight: '600',
-                fontSize: '0.9rem',
+                padding: '0.5rem 0.875rem',
+                background: 'transparent',
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                borderRadius: '8px',
+                color: '#525252',
+                fontSize: '0.8125rem',
+                fontWeight: '500',
                 cursor: 'pointer',
-                transition: 'all 0.2s',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem'
+                gap: '0.375rem',
+                transition: 'all 0.15s ease-out',
+                fontFamily: 'inherit'
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.25)'
-                e.currentTarget.style.transform = 'translateY(-2px)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)'
-                e.currentTarget.style.transform = 'translateY(0)'
-              }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#0A0A0A'; e.currentTarget.style.color = '#0A0A0A' }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.08)'; e.currentTarget.style.color = '#525252' }}
             >
-              <FiLogOut size={16} />
+              <FiSettings size={14} />
+              Settings
+            </button>
+
+            <button
+              onClick={handleLogout}
+              style={{
+                padding: '0.5rem 0.875rem',
+                background: '#0A0A0A',
+                border: 'none',
+                borderRadius: '8px',
+                color: 'white',
+                fontSize: '0.8125rem',
+                fontWeight: '500',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.375rem',
+                transition: 'all 0.15s ease-out',
+                fontFamily: 'inherit'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+            >
+              <FiLogOut size={14} />
               Logout
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Main Content */}
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2.5rem 2rem' }}>
-        {/* Page Header with Clean Card */}
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
+        {/* Page Header */}
         <div style={{ 
-          background: 'white',
-          borderRadius: '16px',
-          padding: '2rem',
-          marginBottom: '2rem',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e5e7eb',
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          marginBottom: '1.5rem'
         }}>
           <div>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: '700', color: '#1f2937', margin: '0 0 0.5rem 0' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#0A0A0A', margin: '0 0 0.25rem 0', letterSpacing: '-0.02em' }}>
               Patient Roster
             </h2>
-            <p style={{ fontSize: '1rem', color: '#64748b', margin: 0 }}>
+            <p style={{ fontSize: '0.875rem', color: '#A3A3A3', margin: 0 }}>
               Manage your patients and access their medical records
             </p>
           </div>
           
-          {/* Add Patient Button */}
           <button
             onClick={() => setShowModal(true)}
             style={{
-              padding: '0.875rem 1.5rem',
-              background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+              padding: '0.75rem 1.25rem',
+              background: '#0A0A0A',
               border: 'none',
-              borderRadius: '10px',
+              borderRadius: '8px',
               color: 'white',
               fontWeight: '600',
-              fontSize: '0.95rem',
+              fontSize: '0.9375rem',
               cursor: 'pointer',
-              transition: 'all 0.2s',
+              transition: 'all 0.15s ease-out',
               display: 'flex',
               alignItems: 'center',
               gap: '0.5rem',
-              boxShadow: '0 2px 8px rgba(124, 58, 237, 0.25)'
+              fontFamily: 'inherit',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)'
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.35)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)'
-              e.currentTarget.style.boxShadow = '0 2px 8px rgba(124, 58, 237, 0.25)'
-            }}
+            onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)' }}
           >
             <FiPlus size={18} />
-            Add New Patient
+            Sync Patient
           </button>
         </div>
 
         {/* Search Bar */}
         {patients.length > 0 && (
-          <div style={{ marginBottom: '2rem' }}>
-            <div style={{ position: 'relative', maxWidth: '500px' }}>
-              <FiSearch 
-                size={18} 
-                style={{ 
-                  position: 'absolute', 
-                  left: '1rem', 
-                  top: '50%', 
-                  transform: 'translateY(-50%)',
-                  color: '#9ca3af'
-                }} 
-              />
+          <div style={{ marginBottom: '1.5rem' }}>
+            <div style={{ position: 'relative', maxWidth: '400px' }}>
+              <FiSearch size={16} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: '#A3A3A3' }} />
               <input
                 type="text"
-                placeholder="Search patients by name, email, or ID..."
+                placeholder="Search patients..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.875rem 1rem 0.875rem 3rem',
-                  borderRadius: '10px',
-                  border: '2px solid #e5e7eb',
+                  padding: '0.625rem 0.875rem 0.625rem 2.5rem',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
                   background: 'white',
-                  fontSize: '0.95rem',
+                  fontSize: '0.875rem',
                   fontFamily: 'inherit',
-                  transition: 'all 0.2s'
+                  outline: 'none',
+                  transition: 'border-color 0.15s ease-out'
                 }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#7c3aed'
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124, 58, 237, 0.1)'
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = '#e5e7eb'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
+                onFocus={(e) => e.target.style.borderColor = '#0A0A0A'}
+                onBlur={(e) => e.target.style.borderColor = 'rgba(0, 0, 0, 0.08)'}
               />
             </div>
           </div>
         )}
 
-        {/* Patient Grid */}
+        {/* Patient List */}
         <div style={{
-          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%)',
-          backdropFilter: 'blur(10px)',
-          borderRadius: '20px',
-          padding: '2.5rem',
-          boxShadow: '0 8px 32px rgba(37, 99, 235, 0.1)',
-          border: '1px solid rgba(255, 255, 255, 0.8)'
+          background: '#FFFFFF',
+          borderRadius: '12px',
+          padding: '1.5rem',
+          border: '1px solid rgba(0, 0, 0, 0.06)',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)'
         }}>
           {filteredPatients.length === 0 ? (
             <div style={{
               textAlign: 'center',
-              padding: '5rem 2rem',
-              background: 'linear-gradient(135deg, rgba(250, 232, 255, 0.5) 0%, rgba(245, 243, 255, 0.5) 100%)',
-              borderRadius: '16px',
-              border: '2px dashed rgba(168, 85, 247, 0.3)'
+              padding: '3rem 1rem',
+              background: '#F9FAFB',
+              borderRadius: '8px',
+              border: '1px dashed rgba(0, 0, 0, 0.08)'
             }}>
-              <FiUsers size={64} color="#A855F7" style={{ opacity: 0.6 }} />
-              <h3 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#A855F7', marginTop: '1.5rem', marginBottom: '0.75rem' }}>
+              <FiUsers size={40} color="#A3A3A3" style={{ opacity: 0.5 }} />
+              <h3 style={{ fontSize: '1rem', fontWeight: '600', color: '#525252', marginTop: '1rem', marginBottom: '0.5rem' }}>
                 {searchQuery ? 'No Patients Found' : 'No Patients Yet'}
               </h3>
-              <p style={{ fontSize: '1.05rem', color: '#64748b', lineHeight: '1.6', maxWidth: '500px', margin: '0 auto 1.5rem' }}>
+              <p style={{ fontSize: '0.875rem', color: '#A3A3A3', maxWidth: '400px', margin: '0 auto 1rem' }}>
                 {searchQuery 
-                  ? `No patients match "${searchQuery}". Try a different search term.`
-                  : 'Start building your patient roster by clicking "Add New Patient" to sync with a patient using their Patient ID'
+                  ? `No patients match "${searchQuery}".`
+                  : 'Start by clicking "Add Patient" to sync with a patient using their ID.'
                 }
               </p>
               {!searchQuery && (
                 <div style={{
-                  padding: '0.75rem 1.5rem',
-                  background: 'linear-gradient(135deg, rgba(232, 121, 249, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%)',
-                  borderRadius: '10px',
+                  padding: '0.5rem 1rem',
+                  background: '#F0F0F0',
+                  borderRadius: '6px',
                   display: 'inline-block',
-                  fontSize: '0.9rem',
-                  fontWeight: '600',
-                  color: '#A855F7',
-                  border: '1px solid rgba(168, 85, 247, 0.3)'
+                  fontSize: '0.75rem',
+                  fontWeight: '500',
+                  color: '#525252'
                 }}>
                   💡 Patients share their 9-digit ID with you
                 </div>
               )}
             </div>
           ) : (
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-              gap: '1.5rem'
-            }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {filteredPatients.map((patient, index) => (
                 <div 
                   key={index} 
                   style={{
-                    background: 'linear-gradient(135deg, #ffffff 0%, #fdf4ff 100%)',
-                    borderRadius: '16px',
-                    padding: '2rem',
-                    border: '2px solid #fae8ff',
-                    transition: 'all 0.3s',
+                    background: 'white',
+                    borderRadius: '8px',
+                    padding: '1rem 1.25rem',
+                    border: '1px solid rgba(0, 0, 0, 0.04)',
+                    transition: 'all 0.15s ease-out',
                     cursor: 'pointer',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.06)',
-                    position: 'relative',
-                    overflow: 'hidden'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-8px)'
-                    e.currentTarget.style.boxShadow = '0 12px 28px rgba(232, 121, 249, 0.2)'
-                    e.currentTarget.style.borderColor = '#E879F9'
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #ffffff 0%, #fae8ff 100%)'
+                    e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.12)'
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.04)'
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.06)'
-                    e.currentTarget.style.borderColor = '#fae8ff'
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #ffffff 0%, #fdf4ff 100%)'
+                    e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.04)'
+                    e.currentTarget.style.boxShadow = 'none'
                   }}
                   onClick={() => navigate('/patient-files', { 
-                    state: { 
-                      patientEmail: patient.email,
-                      patientName: patient.name
-                    }
+                    state: { patientEmail: patient.email, patientName: patient.name }
                   })}
                 >
-                  {/* Top Badge - Patient ID */}
+                  {/* Profile Picture */}
                   <div style={{
-                    position: 'absolute',
-                    top: '1rem',
-                    right: '1rem',
-                    background: 'linear-gradient(135deg, #fae8ff 0%, #f3e8ff 100%)',
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '50%',
+                    overflow: 'hidden',
+                    border: '1px solid rgba(0, 0, 0, 0.06)',
+                    flexShrink: 0
+                  }}>
+                    {patient.profilePicture ? (
+                      <img src={patient.profilePicture} alt={patient.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      <div style={{
+                        width: '100%',
+                        height: '100%',
+                        background: '#F5F5F5',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        <FiUser size={20} color="#A3A3A3" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Patient Info */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <h3 style={{
+                      fontSize: '0.9375rem',
+                      fontWeight: '600',
+                      color: '#0A0A0A',
+                      margin: 0,
+                      letterSpacing: '-0.01em'
+                    }}>
+                      {patient.name}
+                    </h3>
+                  </div>
+
+                  {/* Patient ID Badge */}
+                  <div style={{
+                    background: '#F5F5F5',
                     padding: '0.375rem 0.75rem',
                     borderRadius: '6px',
                     fontSize: '0.75rem',
-                    fontWeight: '700',
-                    color: '#A855F7',
+                    fontWeight: '600',
+                    color: '#525252',
                     fontFamily: 'monospace',
-                    letterSpacing: '0.05em'
+                    letterSpacing: '0.02em',
+                    flexShrink: 0
                   }}>
                     {patient.patientKey ? formatPatientKey(patient.patientKey) : 'No ID'}
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.25rem' }}>
-                    {/* Profile Picture */}
-                    <div style={{
-                      width: '100px',
-                      height: '100px',
-                      borderRadius: '50%',
-                      overflow: 'hidden',
-                      border: '4px solid #E879F9',
-                      boxShadow: '0 8px 20px rgba(232, 121, 249, 0.25)',
-                      background: 'white'
-                    }}>
-                      {patient.profilePicture ? (
-                        <img 
-                          src={patient.profilePicture} 
-                          alt={patient.name}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover'
-                          }}
-                        />
-                      ) : (
-                        <div style={{
-                          width: '100%',
-                          height: '100%',
-                          background: 'linear-gradient(135deg, #fae8ff 0%, #f3e8ff 100%)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}>
-                          <FiUser size={48} color="#A855F7" />
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Patient Info */}
-                    <div style={{ textAlign: 'center', width: '100%' }}>
-                      <h3 style={{
-                        fontSize: '1.25rem',
-                        fontWeight: '700',
-                        color: '#1f2937',
-                        margin: '0 0 0.5rem 0',
-                        wordBreak: 'break-word'
-                      }}>
-                        {patient.name}
-                      </h3>
-                      <p style={{
-                        fontSize: '0.9rem',
-                        color: '#6b7280',
-                        margin: '0 0 1.5rem 0',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.5rem'
-                      }}>
-                        <FiUser size={14} />
-                        {patient.email}
-                      </p>
-
-                      {/* Action Buttons */}
-                      <div style={{ display: 'flex', gap: '0.75rem', width: '100%' }}>
-                        <button
-                          style={{
-                            flex: 1,
-                            padding: '0.75rem',
-                            background: 'linear-gradient(135deg, #E879F9 0%, #A855F7 100%)',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '10px',
-                            fontSize: '0.9rem',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s',
-                            boxShadow: '0 4px 12px rgba(232, 121, 249, 0.3)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '0.5rem'
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            navigate('/patient-files', { 
-                              state: { 
-                                patientEmail: patient.email,
-                                patientName: patient.name
-                              }
-                            })
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'scale(1.05)'
-                            e.currentTarget.style.boxShadow = '0 6px 16px rgba(232, 121, 249, 0.4)'
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'scale(1)'
-                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(232, 121, 249, 0.3)'
-                          }}
-                        >
-                          <FiFileText size={16} />
-                          View Records
-                        </button>
-                      </div>
-
-                      {/* Quick Stats */}
-                      <div style={{
-                        marginTop: '1.25rem',
-                        padding: '1rem',
-                        background: 'linear-gradient(135deg, #fdf4ff 0%, #faf5ff 100%)',
-                        borderRadius: '10px',
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr',
-                        gap: '1rem'
-                      }}>
-                        <div style={{ textAlign: 'center' }}>
-                          <FiFileText size={18} color="#A855F7" style={{ marginBottom: '0.25rem' }} />
-                          <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Files</div>
-                          <div style={{ fontSize: '1rem', fontWeight: '700', color: '#1f2937' }}>—</div>
-                        </div>
-                        <div style={{ textAlign: 'center' }}>
-                          <FiClock size={18} color="#A855F7" style={{ marginBottom: '0.25rem' }} />
-                          <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Last Visit</div>
-                          <div style={{ fontSize: '1rem', fontWeight: '700', color: '#1f2937' }}>—</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  {/* Manage Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      navigate('/patient-files', { state: { patientEmail: patient.email, patientName: patient.name }})
+                    }}
+                    style={{
+                      padding: '0.5rem 0.875rem',
+                      background: '#0A0A0A',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      fontSize: '0.8125rem',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.375rem',
+                      fontFamily: 'inherit',
+                      transition: 'opacity 0.15s ease-out',
+                      flexShrink: 0
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                  >
+                    <FiFileText size={14} />
+                    Manage
+                  </button>
                 </div>
               ))}
             </div>
           )}
         </div>
-      </div>
+      </main>
 
       {/* Add Patient Modal */}
       {showModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(168, 85, 247, 0.4)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 9999,
-          padding: '1rem',
-          animation: 'fadeIn 0.2s ease-out'
-        }}>
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(253, 244, 255, 0.95) 100%)',
-            backdropFilter: 'blur(20px)',
-            borderRadius: '24px',
-            padding: '2.5rem',
-            maxWidth: '500px',
-            width: '100%',
-            boxShadow: '0 24px 60px rgba(232, 121, 249, 0.25)',
-            border: '1px solid rgba(255, 255, 255, 0.8)',
-            animation: 'slideUp 0.3s ease-out'
-          }}>
-            {/* Modal Header */}
-            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <div style={{
-                width: '70px',
-                height: '70px',
-                margin: '0 auto 1.25rem',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #E879F9 0%, #A855F7 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 8px 24px rgba(232, 121, 249, 0.3)'
-              }}>
-                <FiPlus size={32} color="white" />
-              </div>
-              <h3 style={{
-                fontSize: '1.75rem',
-                fontWeight: '700',
-                color: '#A855F7',
-                margin: '0 0 0.5rem 0'
-              }}>
-                Add New Patient
-              </h3>
-              <p style={{
-                fontSize: '1rem',
-                color: '#64748b',
-                margin: 0
-              }}>
-                Enter the patient's 9-digit ID to add them to your roster
-              </p>
-            </div>
-
-            {/* Input Field */}
-            <div style={{ marginBottom: '2rem' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '0.9rem',
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(250, 250, 250, 0.95)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 2000,
+            padding: '1.5rem',
+            animation: 'fadeIn 0.15s ease-out'
+          }}
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: '16px',
+              padding: '2rem',
+              width: '100%',
+              maxWidth: '400px',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
+              border: '1px solid rgba(0, 0, 0, 0.06)',
+              animation: 'slideUp 0.2s ease-out',
+              position: 'relative'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowModal(false)}
+              style={{
+                position: 'absolute',
+                top: '1rem',
+                right: '1rem',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '0.25rem',
+                color: '#A3A3A3',
+                transition: 'color 0.15s ease-out'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#0A0A0A'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#A3A3A3'}
+            >
+              <FiX size={20} />
+            </button>
+            
+            <h3 style={{
+              fontSize: '1.25rem',
+              fontWeight: '600',
+              marginBottom: '0.5rem',
+              color: '#0A0A0A',
+              letterSpacing: '-0.02em'
+            }}>
+              Sync with Patient
+            </h3>
+            <p style={{
+              fontSize: '0.875rem',
+              color: '#A3A3A3',
+              marginBottom: '1.5rem'
+            }}>
+              Enter the patient's 9-digit ID to connect
+            </p>
+            
+            <input
+              type="text"
+              value={patientKey}
+              onChange={(e) => setPatientKey(e.target.value)}
+              placeholder="123-456-789"
+              maxLength="11"
+              style={{
+                width: '100%',
+                padding: '0.875rem 1rem',
+                fontSize: '1.125rem',
+                borderRadius: '8px',
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                marginBottom: '0.75rem',
+                fontFamily: 'monospace',
+                textAlign: 'center',
+                letterSpacing: '0.1em',
                 fontWeight: '600',
-                color: '#374151',
-                marginBottom: '0.5rem'
-              }}>
-                Patient ID
-              </label>
-              <input
-                type="text"
-                value={patientKey}
-                onChange={(e) => setPatientKey(e.target.value)}
-                placeholder="123-456-789"
-                style={{
-                  width: '100%',
-                  padding: '1rem 1.25rem',
-                  borderRadius: '12px',
-                  border: '2px solid #e5e7eb',
-                  fontSize: '1.1rem',
-                  fontFamily: 'monospace',
-                  fontWeight: '600',
-                  letterSpacing: '0.1em',
-                  textAlign: 'center',
-                  transition: 'all 0.2s'
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#2563eb'
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.1)'
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = '#e5e7eb'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') handleAddPatient()
-                }}
-              />
-              <p style={{
-                fontSize: '0.85rem',
-                color: '#6b7280',
-                marginTop: '0.5rem',
-                textAlign: 'center'
-              }}>
-                Patients can find their ID in the top-right corner of their dashboard
-              </p>
-            </div>
-
-            {/* Action Buttons */}
-            <div style={{ display: 'flex', gap: '1rem' }}>
+                outline: 'none',
+                transition: 'border-color 0.15s ease-out'
+              }}
+              onFocus={(e) => e.target.style.borderColor = '#0A0A0A'}
+              onBlur={(e) => e.target.style.borderColor = 'rgba(0, 0, 0, 0.08)'}
+              onKeyPress={(e) => e.key === 'Enter' && handleAddPatient()}
+              autoFocus
+            />
+            <p style={{
+              fontSize: '0.75rem',
+              color: '#A3A3A3',
+              marginBottom: '1.5rem',
+              textAlign: 'center'
+            }}>
+              Ask your patient for their ID from their profile
+            </p>
+            
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button
-                onClick={() => {
-                  setShowModal(false)
-                  setPatientKey('')
-                }}
+                onClick={() => setShowModal(false)}
                 style={{
                   flex: 1,
-                  padding: '1rem',
-                  background: 'white',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '12px',
-                  color: '#6b7280',
-                  fontWeight: '600',
-                  fontSize: '1rem',
+                  padding: '0.75rem',
+                  background: 'transparent',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  borderRadius: '8px',
+                  color: '#525252',
+                  fontWeight: '500',
                   cursor: 'pointer',
-                  transition: 'all 0.2s'
+                  fontSize: '0.9375rem',
+                  fontFamily: 'inherit',
+                  transition: 'all 0.15s ease-out'
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#d1d5db'
-                  e.currentTarget.style.background = '#f9fafb'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = '#e5e7eb'
-                  e.currentTarget.style.background = 'white'
-                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#0A0A0A'; e.currentTarget.style.color = '#0A0A0A' }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.08)'; e.currentTarget.style.color = '#525252' }}
               >
                 Cancel
               </button>
@@ -829,48 +779,35 @@ function DoctorProfile() {
                 onClick={handleAddPatient}
                 style={{
                   flex: 1,
-                  padding: '1rem',
-                  background: 'linear-gradient(135deg, #E879F9 0%, #A855F7 100%)',
+                  padding: '0.75rem',
+                  background: '#0A0A0A',
                   border: 'none',
-                  borderRadius: '12px',
+                  borderRadius: '8px',
                   color: 'white',
-                  fontWeight: '600',
-                  fontSize: '1rem',
+                  fontWeight: '500',
                   cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  boxShadow: '0 4px 12px rgba(232, 121, 249, 0.3)'
+                  fontSize: '0.9375rem',
+                  fontFamily: 'inherit',
+                  transition: 'opacity 0.15s ease-out'
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(232, 121, 249, 0.4)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(232, 121, 249, 0.3)'
-                }}
+                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
               >
-                Add Patient
+                Sync Patient
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Add animations */}
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
         }
         @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
         }
         @keyframes spin {
           from { transform: rotate(0deg); }
@@ -882,4 +819,3 @@ function DoctorProfile() {
 }
 
 export default DoctorProfile
-

@@ -1,137 +1,155 @@
-/* Contact Page */
+/* ========================================
+   Contact Page - Modern Minimal Design
+   ======================================== */
+
 .contact-page {
   min-height: 100vh;
-  background: #fafafa;
-  padding: 2rem 6%;
+  background: var(--bg-primary);
+  padding: 1.5rem 5%;
 }
 
 .back-button {
   background: none;
   border: none;
-  color: #666;
-  font-size: 0.95rem;
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  letter-spacing: -0.01em;
   cursor: pointer;
   margin-bottom: 2rem;
   padding: 0.5rem 0;
-  transition: color 0.3s ease;
+  transition: color 0.15s ease-out;
   font-weight: 500;
+  font-family: inherit;
 }
 
 .back-button:hover {
-  color: #E879F9;
+  color: var(--text-primary);
 }
 
 .contact-container {
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
   text-align: center;
 }
 
 .contact-title {
-  font-size: 3rem;
-  font-weight: 800;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #1a1a1a;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
 }
 
 .contact-subtitle {
-  font-size: 1.125rem;
-  color: #666;
+  font-size: 1rem;
+  color: var(--text-secondary);
   margin-bottom: 3rem;
+  letter-spacing: -0.01em;
 }
 
 .contact-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1.5fr;
   gap: 3rem;
   text-align: left;
 }
 
 .contact-info h2,
 .contact-form h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: #1a1a1a;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
 }
 
 .info-item {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .info-label {
-  font-size: 0.875rem;
-  color: #999;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
   margin-bottom: 0.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-weight: 500;
 }
 
 .info-value {
-  font-size: 1.125rem;
-  color: #1a1a1a;
-  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  font-weight: 500;
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color 0.15s ease-out;
   display: inline-block;
+  letter-spacing: -0.01em;
 }
 
 .info-value:hover {
-  color: #E879F9;
+  color: var(--text-secondary);
 }
 
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .contact-input,
 .contact-textarea {
   width: 100%;
-  padding: 1rem;
-  background: white;
-  border: 1.5px solid #e0e0e0;
-  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
   outline: none;
-  color: #1a1a1a;
-  font-size: 1rem;
+  color: var(--text-primary);
+  font-size: 0.9375rem;
   font-family: inherit;
-  transition: all 0.3s ease;
+  letter-spacing: -0.01em;
+  transition: all 0.15s ease-out;
 }
 
 .contact-input:focus,
 .contact-textarea:focus {
-  border-color: #E879F9;
-  box-shadow: 0 0 0 3px rgba(232, 121, 249, 0.1);
+  border-color: var(--text-primary);
+  background: var(--bg-secondary);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.contact-input::placeholder,
+.contact-textarea::placeholder {
+  color: var(--text-tertiary);
 }
 
 .contact-textarea {
   resize: vertical;
+  min-height: 120px;
 }
 
 .contact-submit {
-  padding: 1rem;
-  background: linear-gradient(135deg, #E879F9 0%, #A855F7 100%);
+  padding: 0.75rem 1.5rem;
+  background: var(--text-primary);
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   color: white;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  letter-spacing: -0.01em;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 16px rgba(232, 121, 249, 0.3);
+  transition: all 0.15s ease-out;
+  font-family: inherit;
+  margin-top: 0.25rem;
 }
 
 .contact-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(232, 121, 249, 0.4);
+  opacity: 0.85;
 }
 
-@media (max-width: 768px) {
-  .contact-title {
-    font-size: 2rem;
+@media (max-width: 640px) {
+  .contact-page {
+    padding: 1.25rem 4%;
   }
 
   .contact-content {
@@ -139,4 +157,3 @@
     gap: 2rem;
   }
 }
-

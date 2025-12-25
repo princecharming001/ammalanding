@@ -6,7 +6,9 @@ import Profile from './components/Profile'
 import PatientProfile from './pages/PatientProfile'
 import DoctorProfile from './pages/DoctorProfile'
 import PatientFilesPage from './pages/PatientFilesPage'
+import DoctorSettings from './pages/DoctorSettings'
 import EpicCallbackPage from './pages/EpicCallbackPage'
+import LavaLamp from './components/LavaLamp'
 const ammaLogo = '/images/Black Elephant Flat Illustrative Company Logo.png'
 import './App.css'
 
@@ -15,57 +17,26 @@ import './App.css'
 function HomePage() {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
-    clinicName: '',
-    doctorName: '',
-    phone: '',
-    email: ''
+    name: '',
+    email: '',
+    organization: ''
   })
 
   const [openFaq, setOpenFaq] = useState(null)
   const [formOpen, setFormOpen] = useState(false)
-  const [showBetaModal, setShowBetaModal] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    if (!formData.email || !formData.doctorName) {
-      alert('Please fill in required fields')
-      return
-    }
-    setSubmitting(true)
-    try {
-      const { supabase } = await import('./utils/supabaseClient')
-      const { error } = await supabase
-        .from('demo_requests')
-        .insert([{
-          name: formData.doctorName,
-          email: formData.email,
-          organization: formData.clinicName,
-          phone: formData.phone,
-          requested_at: new Date().toISOString()
-        }])
-      
-      if (error) {
-        console.error('Error submitting waitlist:', error)
-        alert('Error submitting. Please try again.')
-      } else {
-        alert('🎉 Thank you for joining the waitlist! We\'ll be in touch soon.')
-        setFormData({ clinicName: '', doctorName: '', phone: '', email: '' })
-        setFormOpen(false)
-      }
-    } catch (error) {
-      console.error('Error:', error)
-      alert('Error submitting. Please try again.')
-    } finally {
-      setSubmitting(false)
-    }
+    console.log('Demo requested:', formData)
+    alert('Thank you! We\'ll be in touch shortly to schedule your demo.')
+    setFormData({ name: '', email: '', organization: '' })
   }
 
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index)
   }
 
-  const scrollToWaitlistForm = () => {
+  const scrollToDemoForm = () => {
     setFormOpen(true)
     setTimeout(() => {
       document.querySelector('.demo-toggle-btn')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -74,202 +45,6 @@ function HomePage() {
 
   return (
     <div className="app">
-      {/* Beta Version Only Modal - No input fields */}
-      {showBetaModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(0, 0, 0, 0.7)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 9999,
-          padding: '1rem'
-        }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
-            borderRadius: '24px',
-            padding: '3rem 2.5rem',
-            maxWidth: '520px',
-            width: '100%',
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-            border: '1px solid rgba(124, 58, 237, 0.2)',
-            position: 'relative',
-            animation: 'modalSlideIn 0.4s ease-out'
-          }}>
-            {/* Gradient accent bar */}
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: 'calc(100% - 2px)',
-              height: '6px',
-              background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
-              borderRadius: '24px 24px 0 0'
-            }} />
-            
-            {/* Logo */}
-            <div style={{
-              width: '80px',
-              height: '80px',
-              margin: '0 auto 1.5rem',
-              borderRadius: '50%',
-              background: 'white',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 8px 24px rgba(124, 58, 237, 0.3)',
-              border: '3px solid rgba(124, 58, 237, 0.2)'
-            }}>
-              <img 
-                src="/images/Black Elephant Flat Illustrative Company Logo.png" 
-                alt="Amma Logo" 
-                style={{ 
-                  width: '60px', 
-                  height: '60px',
-                  objectFit: 'contain'
-                }} 
-              />
-            </div>
-
-            {/* Title */}
-            <h2 style={{
-              fontSize: '2rem',
-              fontWeight: '800',
-              textAlign: 'center',
-              marginBottom: '1rem',
-              background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}>
-              Beta Version Only
-            </h2>
-
-            {/* Message */}
-            <p style={{
-              fontSize: '1.125rem',
-              color: '#64748b',
-              textAlign: 'center',
-              lineHeight: '1.7',
-              marginBottom: '2rem'
-            }}>
-              We're currently in private beta with select healthcare providers.
-              <br />
-              <strong style={{ color: '#1f2937' }}>Join the waitlist to get early access!</strong>
-            </p>
-
-            {/* Stats */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr 1fr',
-              gap: '1rem',
-              marginBottom: '2rem',
-              padding: '1.5rem',
-              background: 'rgba(124, 58, 237, 0.05)',
-              borderRadius: '12px',
-              border: '1px solid rgba(124, 58, 237, 0.1)'
-            }}>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#7c3aed' }}>100+</div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.25rem' }}>Clinicians</div>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#7c3aed' }}>5000+</div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.25rem' }}>Videos</div>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#7c3aed' }}>50%</div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.25rem' }}>Shorter appointments</div>
-              </div>
-            </div>
-
-            {/* Buttons - No input fields */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <button
-                onClick={() => {
-                  setShowBetaModal(false)
-                  setFormOpen(true)
-                  setTimeout(() => {
-                    document.querySelector('.demo-toggle-btn')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                  }, 100)
-                }}
-                style={{
-                  padding: '1rem 2rem',
-                  background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
-                  border: 'none',
-                  borderRadius: '12px',
-                  color: 'white',
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 16px rgba(124, 58, 237, 0.3)',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
-                onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
-              >
-                🚀 Join the Waitlist
-              </button>
-              
-              <button
-                onClick={() => setShowBetaModal(false)}
-                style={{
-                  padding: '1rem 2rem',
-                  background: 'white',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '12px',
-                  color: '#64748b',
-                  fontSize: '0.95rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.borderColor = '#7c3aed'
-                  e.target.style.color = '#7c3aed'
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.borderColor = '#e5e7eb'
-                  e.target.style.color = '#64748b'
-                }}
-              >
-                Continue Browsing
-              </button>
-            </div>
-
-            {/* Footer note */}
-            <p style={{
-              fontSize: '0.875rem',
-              color: '#9ca3af',
-              textAlign: 'center',
-              marginTop: '1.5rem',
-              paddingTop: '1.5rem',
-              borderTop: '1px solid #f0f0f0'
-            }}>
-              Join our waitlist to be among the first to experience Amma.
-            </p>
-          </div>
-        </div>
-      )}
-
-      <style>{`
-        @keyframes modalSlideIn {
-          from {
-            opacity: 0;
-            transform: translateY(-20px) scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
-      `}</style>
 
 
 
@@ -281,17 +56,17 @@ function HomePage() {
         </div>
         <div className="nav-links">
           <button className="nav-link" onClick={() => navigate('/contact')}>Contact</button>
-          <button className="nav-cta" onClick={() => navigate('/login')}>Get Started</button>
         </div>
       </nav>
 
       {/* Hero Section */}
       <section className="hero">
+        <LavaLamp />
         <div className="section-label">HERO</div>
         <div className="hero-content">
           <div className="announcement-badge">
             <span className="pulse-dot"></span>
-            Backed by Sam Altman's The Residency
+            Selected for Sam Altman's The Residency
           </div>
           
           <h1 className="hero-title">
@@ -323,44 +98,38 @@ function HomePage() {
             className="demo-toggle-btn"
             onClick={() => setFormOpen(!formOpen)}
           >
-            {formOpen ? 'Close Form ✕' : 'Join the Waitlist →'}
+            {formOpen ? 'Close Form ✕' : 'Book a Demo →'}
           </button>
 
           {formOpen && (
             <form onSubmit={handleSubmit} className="demo-form">
               <input
                 type="text"
-                placeholder="Clinic Name"
-                value={formData.clinicName}
-                onChange={(e) => setFormData({...formData, clinicName: e.target.value})}
-                className="form-input"
-              />
-              <input
-                type="text"
-                placeholder="Doctor Name *"
-                value={formData.doctorName}
-                onChange={(e) => setFormData({...formData, doctorName: e.target.value})}
+                placeholder="Full Name"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
                 required
                 className="form-input"
               />
               <input
-                type="tel"
-                placeholder="Phone Number"
-                value={formData.phone}
-                onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                className="form-input"
-              />
-              <input
                 type="email"
-                placeholder="Email Address *"
+                placeholder="Work Email"
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
                 required
                 className="form-input"
               />
-              <button type="submit" className="submit-btn" disabled={submitting}>
-                {submitting ? 'Submitting...' : 'Join Waitlist →'}
-              </button>
+              <input
+                type="text"
+                placeholder="Organization"
+                value={formData.organization}
+                onChange={(e) => setFormData({...formData, organization: e.target.value})}
+                required
+                className="form-input"
+              />
+              <button type="submit" className="submit-btn">
+                Submit Demo Request →
+        </button>
             </form>
           )}
         </div>
@@ -488,7 +257,7 @@ function HomePage() {
 
         <div className="benefits-grid">
           <div className="benefit-card">
-            <h3>Dramatically Fewer Follow-Up Calls</h3>
+            <h3>80% Less Follow-Up Calls</h3>
             <p>
               When patients actually understand their treatment through personalized videos, 
               they stop calling with the same questions. Your staff reclaims hours every week.
@@ -504,7 +273,7 @@ function HomePage() {
           </div>
 
           <div className="benefit-card">
-            <h3>Save Time Per Patient</h3>
+            <h3>50% Shorter Appointments</h3>
             <p>
               Stop repeating the same explanations every visit. Amma handles patient 
               education automatically, freeing you to focus on diagnosis and treatment.
@@ -612,7 +381,7 @@ function HomePage() {
             Join 100+ clinicians using Amma to save time, reduce callbacks, 
             and help patients actually follow through on their care.
           </p>
-          <button className="cta-button" onClick={scrollToWaitlistForm}>Join the Waitlist →</button>
+          <button className="cta-button" onClick={scrollToDemoForm}>Book Your Demo →</button>
       </div>
       </section>
 
@@ -652,6 +421,7 @@ function App() {
       <Route path="/patient" element={<PatientProfile />} />
       <Route path="/doctor" element={<DoctorProfile />} />
       <Route path="/patient-files" element={<PatientFilesPage />} />
+      <Route path="/doctor/settings" element={<DoctorSettings />} />
       <Route path="/epic-callback" element={<EpicCallbackPage />} />
     </Routes>
   )

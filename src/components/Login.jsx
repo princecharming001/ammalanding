@@ -171,7 +171,7 @@ function Login() {
 
   return (
     <div className="login-page">
-      {/* Beta Access Modal */}
+      {/* Beta Access Modal - Minimal Design */}
       {showBetaModal && (
         <div style={{
           position: 'fixed',
@@ -179,56 +179,41 @@ function Login() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(0, 0, 0, 0.7)',
+          background: 'rgba(250, 250, 250, 0.95)',
           backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 9999,
-          padding: '1rem'
+          padding: '1.5rem',
+          animation: 'fadeIn 0.2s ease-out'
         }}>
           <div style={{
-            background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
-            borderRadius: '24px',
-            padding: '3rem 2.5rem',
-            maxWidth: '520px',
+            background: '#FFFFFF',
+            borderRadius: '16px',
+            padding: '2.5rem 2rem',
+            maxWidth: '400px',
             width: '100%',
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-            border: '1px solid rgba(124, 58, 237, 0.2)',
-            position: 'relative',
-            animation: 'modalSlideIn 0.4s ease-out'
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04)',
+            border: '1px solid rgba(0, 0, 0, 0.06)',
+            animation: 'slideUp 0.25s ease-out'
           }}>
-            {/* Gradient accent bar */}
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: 'calc(100% - 2px)',
-              height: '6px',
-              background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
-              borderRadius: '24px 24px 0 0'
-            }} />
-            
             {/* Logo */}
             <div style={{
-              width: '80px',
-              height: '80px',
+              width: '48px',
+              height: '48px',
               margin: '0 auto 1.5rem',
-              borderRadius: '50%',
-              background: 'white',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 8px 24px rgba(124, 58, 237, 0.3)',
-              border: '3px solid rgba(124, 58, 237, 0.2)'
+              justifyContent: 'center'
             }}>
               <img 
                 src="/images/Black Elephant Flat Illustrative Company Logo.png" 
                 alt="Amma Logo" 
                 style={{ 
-                  width: '60px', 
-                  height: '60px',
+                  width: '48px', 
+                  height: '48px',
                   objectFit: 'contain'
                 }} 
               />
@@ -236,186 +221,204 @@ function Login() {
 
             {/* Title */}
             <h2 style={{
-              fontSize: '2rem',
-              fontWeight: '800',
+              fontSize: '1.375rem',
+              fontWeight: '600',
               textAlign: 'center',
-              marginBottom: '1rem',
-              background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
+              marginBottom: '0.5rem',
+              letterSpacing: '-0.02em',
+              color: '#0A0A0A'
             }}>
-              Beta Access Only
+              Beta Access
             </h2>
 
             {/* Message */}
             <p style={{
-              fontSize: '1.125rem',
-              color: '#64748b',
+              fontSize: '0.9375rem',
+              color: '#525252',
               textAlign: 'center',
-              lineHeight: '1.7',
-              marginBottom: '2rem'
+              lineHeight: '1.6',
+              marginBottom: '2rem',
+              letterSpacing: '-0.01em'
             }}>
-              We're currently in private beta with select healthcare providers.
-              <br />
-              <strong style={{ color: '#1f2937' }}>Launching publicly soon!</strong>
+              We're in private beta with select healthcare providers.
             </p>
 
             {/* Stats */}
             <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr 1fr',
-              gap: '1rem',
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '2.5rem',
               marginBottom: '2rem',
-              padding: '1.5rem',
-              background: 'rgba(124, 58, 237, 0.05)',
-              borderRadius: '12px',
-              border: '1px solid rgba(124, 58, 237, 0.1)'
+              padding: '1.25rem 0',
+              borderTop: '1px solid rgba(0, 0, 0, 0.06)',
+              borderBottom: '1px solid rgba(0, 0, 0, 0.06)'
             }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#7c3aed' }}>100+</div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.25rem' }}>Clinicians</div>
+                <div style={{ fontSize: '1.25rem', fontWeight: '600', letterSpacing: '-0.02em', color: '#0A0A0A' }}>100+</div>
+                <div style={{ fontSize: '0.75rem', color: '#A3A3A3', marginTop: '0.125rem', letterSpacing: '-0.01em' }}>Clinicians</div>
               </div>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#7c3aed' }}>5000+</div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.25rem' }}>Videos</div>
+                <div style={{ fontSize: '1.25rem', fontWeight: '600', letterSpacing: '-0.02em', color: '#0A0A0A' }}>5K+</div>
+                <div style={{ fontSize: '0.75rem', color: '#A3A3A3', marginTop: '0.125rem', letterSpacing: '-0.01em' }}>Videos</div>
               </div>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: '#7c3aed' }}>50%</div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.25rem' }}>Decrease in appointment lengths</div>
+                <div style={{ fontSize: '1.25rem', fontWeight: '600', letterSpacing: '-0.02em', color: '#0A0A0A' }}>50%</div>
+                <div style={{ fontSize: '0.75rem', color: '#A3A3A3', marginTop: '0.125rem', letterSpacing: '-0.01em' }}>Faster</div>
               </div>
             </div>
 
             {/* Demo Request Form */}
-            <div style={{ marginBottom: '1.5rem' }}>
+            <div style={{ marginBottom: '1.25rem' }}>
               <input
                 type="text"
-                placeholder="Your Name *"
+                placeholder="Name"
                 value={demoName}
                 onChange={(e) => setDemoName(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.875rem',
-                  marginBottom: '0.75rem',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '10px',
-                  fontSize: '0.95rem',
+                  padding: '0.75rem 1rem',
+                  marginBottom: '0.625rem',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  borderRadius: '8px',
+                  fontSize: '0.9375rem',
                   fontFamily: 'inherit',
-                  transition: 'all 0.2s'
+                  letterSpacing: '-0.01em',
+                  transition: 'all 0.15s ease-out',
+                  outline: 'none',
+                  background: '#FAFAFA'
                 }}
-                onFocus={(e) => e.target.style.borderColor = '#7c3aed'}
-                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#0A0A0A'
+                  e.target.style.background = '#FFFFFF'
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(0, 0, 0, 0.08)'
+                  e.target.style.background = '#FAFAFA'
+                }}
               />
               <input
                 type="email"
-                placeholder="Email Address *"
+                placeholder="Email"
                 value={demoEmail}
                 onChange={(e) => setDemoEmail(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.875rem',
-                  marginBottom: '0.75rem',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '10px',
-                  fontSize: '0.95rem',
+                  padding: '0.75rem 1rem',
+                  marginBottom: '0.625rem',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  borderRadius: '8px',
+                  fontSize: '0.9375rem',
                   fontFamily: 'inherit',
-                  transition: 'all 0.2s'
+                  letterSpacing: '-0.01em',
+                  transition: 'all 0.15s ease-out',
+                  outline: 'none',
+                  background: '#FAFAFA'
                 }}
-                onFocus={(e) => e.target.style.borderColor = '#7c3aed'}
-                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#0A0A0A'
+                  e.target.style.background = '#FFFFFF'
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(0, 0, 0, 0.08)'
+                  e.target.style.background = '#FAFAFA'
+                }}
               />
               <input
                 type="text"
-                placeholder="Organization / Practice (optional)"
+                placeholder="Organization (optional)"
                 value={demoOrganization}
                 onChange={(e) => setDemoOrganization(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.875rem',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '10px',
-                  fontSize: '0.95rem',
+                  padding: '0.75rem 1rem',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  borderRadius: '8px',
+                  fontSize: '0.9375rem',
                   fontFamily: 'inherit',
-                  transition: 'all 0.2s'
+                  letterSpacing: '-0.01em',
+                  transition: 'all 0.15s ease-out',
+                  outline: 'none',
+                  background: '#FAFAFA'
                 }}
-                onFocus={(e) => e.target.style.borderColor = '#7c3aed'}
-                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#0A0A0A'
+                  e.target.style.background = '#FFFFFF'
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(0, 0, 0, 0.08)'
+                  e.target.style.background = '#FAFAFA'
+                }}
               />
             </div>
 
             {/* Buttons */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
               <button
                 onClick={handleDemoRequest}
                 disabled={demoSubmitting}
                 style={{
-                  padding: '1rem 2rem',
-                  background: demoSubmitting ? '#9ca3af' : 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+                  padding: '0.75rem 1.5rem',
+                  background: demoSubmitting ? '#A3A3A3' : '#0A0A0A',
                   border: 'none',
-                  borderRadius: '12px',
+                  borderRadius: '8px',
                   color: 'white',
-                  fontSize: '1rem',
-                  fontWeight: '600',
+                  fontSize: '0.9375rem',
+                  fontWeight: '500',
+                  letterSpacing: '-0.01em',
                   cursor: demoSubmitting ? 'not-allowed' : 'pointer',
-                  boxShadow: '0 4px 16px rgba(124, 58, 237, 0.3)',
-                  transition: 'all 0.3s'
+                  transition: 'all 0.15s ease-out',
+                  fontFamily: 'inherit'
                 }}
-                onMouseEnter={(e) => !demoSubmitting && (e.target.style.transform = 'translateY(-2px)')}
-                onMouseLeave={(e) => !demoSubmitting && (e.target.style.transform = 'translateY(0)')}
+                onMouseEnter={(e) => !demoSubmitting && (e.target.style.opacity = '0.85')}
+                onMouseLeave={(e) => !demoSubmitting && (e.target.style.opacity = '1')}
               >
-                {demoSubmitting ? 'Submitting...' : '📅 Request Demo Access'}
+                {demoSubmitting ? 'Submitting...' : 'Request Access'}
               </button>
               
               <button
                 onClick={() => setShowBetaModal(false)}
                 style={{
-                  padding: '1rem 2rem',
-                  background: 'white',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '12px',
-                  color: '#64748b',
-                  fontSize: '0.95rem',
-                  fontWeight: '600',
+                  padding: '0.75rem 1.5rem',
+                  background: 'transparent',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  borderRadius: '8px',
+                  color: '#525252',
+                  fontSize: '0.9375rem',
+                  fontWeight: '500',
+                  letterSpacing: '-0.01em',
                   cursor: 'pointer',
-                  transition: 'all 0.3s'
+                  transition: 'all 0.15s ease-out',
+                  fontFamily: 'inherit'
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.borderColor = '#7c3aed'
-                  e.target.style.color = '#7c3aed'
+                  e.target.style.borderColor = '#0A0A0A'
+                  e.target.style.color = '#0A0A0A'
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.borderColor = '#e5e7eb'
-                  e.target.style.color = '#64748b'
+                  e.target.style.borderColor = 'rgba(0, 0, 0, 0.08)'
+                  e.target.style.color = '#525252'
                 }}
               >
                 Continue to Login
               </button>
             </div>
-
-            {/* Footer note */}
-            <p style={{
-              fontSize: '0.875rem',
-              color: '#9ca3af',
-              textAlign: 'center',
-              marginTop: '1.5rem',
-              paddingTop: '1.5rem',
-              borderTop: '1px solid #f0f0f0'
-            }}>
-              Interested in early access? Request a demo to learn more.
-            </p>
           </div>
         </div>
       )}
       
       <style>{`
-        @keyframes modalSlideIn {
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideUp {
           from {
             opacity: 0;
-            transform: translateY(-20px) scale(0.95);
+            transform: translateY(8px);
           }
           to {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: translateY(0);
           }
         }
       `}</style>
@@ -431,8 +434,8 @@ function Login() {
         <div className="login-options">
           <div className="login-section">
             <h2>I'm a Patient</h2>
-            <p style={{ marginBottom: '15px', color: '#666', fontSize: '14px' }}>Access your personalized health information</p>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <p>Access your personalized health information</p>
+            <div className="google-login-wrapper" style={{ display: 'flex', justifyContent: 'center' }}>
               <GoogleLogin
                 onSuccess={async (credentialResponse) => {
                   const decoded = jwtDecode(credentialResponse.credential)
@@ -460,8 +463,8 @@ function Login() {
 
           <div className="login-section">
             <h2>I'm a Doctor</h2>
-            <p style={{ marginBottom: '15px', color: '#666', fontSize: '14px' }}>Manage your practice and patients</p>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <p>Manage your practice and patients</p>
+            <div className="google-login-wrapper" style={{ display: 'flex', justifyContent: 'center' }}>
               <GoogleLogin
                 onSuccess={async (credentialResponse) => {
                   const decoded = jwtDecode(credentialResponse.credential)

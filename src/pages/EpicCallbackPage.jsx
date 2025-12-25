@@ -74,59 +74,60 @@ function EpicCallbackPage() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#fafafa',
+      background: '#FAFAFA',
       padding: '2rem'
     }}>
       <div style={{
-        background: 'white',
-        borderRadius: '16px',
-        padding: '3rem 2rem',
-        maxWidth: '500px',
+        background: '#FFFFFF',
+        borderRadius: '12px',
+        padding: '2.5rem 2rem',
+        maxWidth: '400px',
         width: '100%',
         textAlign: 'center',
-        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
-        border: '1px solid #e0e0e0'
+        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.04)',
+        border: '1px solid rgba(0, 0, 0, 0.06)'
       }}>
         {/* Status Icon */}
         <div style={{
-          width: '80px',
-          height: '80px',
-          margin: '0 auto 2rem',
+          width: '56px',
+          height: '56px',
+          margin: '0 auto 1.5rem',
           borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '3rem',
-          background: status === 'processing' ? 'linear-gradient(135deg, #E879F9 0%, #A855F7 100%)' :
-                      status === 'success' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' :
-                      'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+          fontSize: '1.5rem',
+          background: status === 'processing' ? '#0A0A0A' :
+                      status === 'success' ? '#059669' :
+                      '#DC2626',
           color: 'white',
           animation: status === 'processing' ? 'spin 2s linear infinite' : 'none'
         }}>
           {status === 'processing' && '⏳'}
-          {status === 'success' && '✅'}
-          {status === 'error' && '❌'}
+          {status === 'success' && '✓'}
+          {status === 'error' && '✕'}
         </div>
 
         {/* Title */}
         <h1 style={{
-          fontSize: '2rem',
-          fontWeight: '800',
-          marginBottom: '1rem',
-          color: '#1a1a1a',
-          fontFamily: 'Plus Jakarta Sans, sans-serif'
+          fontSize: '1.25rem',
+          fontWeight: '600',
+          marginBottom: '0.5rem',
+          color: '#0A0A0A',
+          letterSpacing: '-0.02em'
         }}>
-          {status === 'processing' && 'Connecting to Epic...'}
-          {status === 'success' && 'Connection Successful!'}
+          {status === 'processing' && 'Connecting...'}
+          {status === 'success' && 'Connected'}
           {status === 'error' && 'Connection Failed'}
         </h1>
 
         {/* Message */}
         <p style={{
-          fontSize: '1.125rem',
-          color: '#666',
-          lineHeight: '1.7',
-          marginBottom: '2rem'
+          fontSize: '0.875rem',
+          color: '#A3A3A3',
+          lineHeight: '1.6',
+          marginBottom: '1.5rem',
+          letterSpacing: '-0.01em'
         }}>
           {message}
         </p>
@@ -135,8 +136,8 @@ function EpicCallbackPage() {
         {status === 'processing' && (
           <div style={{
             width: '100%',
-            height: '4px',
-            background: '#f0f0f0',
+            height: '3px',
+            background: 'rgba(0, 0, 0, 0.06)',
             borderRadius: '2px',
             overflow: 'hidden',
             marginBottom: '1rem'
@@ -144,7 +145,7 @@ function EpicCallbackPage() {
             <div style={{
               width: '50%',
               height: '100%',
-              background: 'linear-gradient(135deg, #E879F9 0%, #A855F7 100%)',
+              background: '#0A0A0A',
               animation: 'progress 1.5s ease-in-out infinite'
             }} />
           </div>
@@ -155,17 +156,21 @@ function EpicCallbackPage() {
           <button
             onClick={() => navigate('/doctor')}
             style={{
-              padding: '1rem 2rem',
-              background: 'linear-gradient(135deg, #E879F9 0%, #A855F7 100%)',
+              padding: '0.75rem 1.5rem',
+              background: '#0A0A0A',
               border: 'none',
-              borderRadius: '12px',
+              borderRadius: '6px',
               color: 'white',
-              fontSize: '1rem',
-              fontWeight: '600',
+              fontSize: '0.875rem',
+              fontWeight: '500',
               cursor: 'pointer',
-              marginTop: '1rem',
-              fontFamily: 'inherit'
+              marginTop: '0.5rem',
+              fontFamily: 'inherit',
+              letterSpacing: '-0.01em',
+              transition: 'all 0.15s ease-out'
             }}
+            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
           >
             Return to Dashboard
           </button>
@@ -174,18 +179,19 @@ function EpicCallbackPage() {
         {/* Success note */}
         {status === 'success' && (
           <div style={{
-            marginTop: '1.5rem',
-            padding: '1rem',
-            background: 'rgba(16, 185, 129, 0.1)',
-            borderRadius: '8px',
-            border: '1px solid rgba(16, 185, 129, 0.3)'
+            marginTop: '1rem',
+            padding: '0.75rem',
+            background: 'rgba(5, 150, 105, 0.06)',
+            borderRadius: '6px',
+            border: '1px solid rgba(5, 150, 105, 0.1)'
           }}>
             <p style={{
-              fontSize: '0.95rem',
+              fontSize: '0.8125rem',
               color: '#059669',
-              margin: 0
+              margin: 0,
+              letterSpacing: '-0.01em'
             }}>
-              You can now access patient data from Epic EHR system
+              Epic EHR data is now accessible
             </p>
           </div>
         )}

@@ -81,35 +81,54 @@ function Profile() {
         <h1 className="profile-welcome">Welcome, {userName}! ❤️</h1>
         <p className="profile-subtitle">You're now logged in to Amma</p>
         
-        <div style={{ margin: '30px 0' }}>
-          <h3 style={{ marginBottom: '10px' }}>Your Notes:</h3>
+        <div style={{ margin: '2rem 0' }}>
+          <h3 style={{ marginBottom: '0.5rem', fontSize: '0.9375rem', fontWeight: '600', color: '#0A0A0A', letterSpacing: '-0.02em' }}>Your Notes</h3>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Type your notes here..."
             style={{
               width: '100%',
-              minHeight: '200px',
-              padding: '15px',
-              fontSize: '16px',
-              borderRadius: '12px',
-              border: '2px solid #ddd',
-              fontFamily: 'inherit'
+              minHeight: '160px',
+              padding: '0.875rem 1rem',
+              fontSize: '0.875rem',
+              borderRadius: '8px',
+              border: '1px solid rgba(0, 0, 0, 0.1)',
+              fontFamily: 'inherit',
+              letterSpacing: '-0.01em',
+              background: '#FAFAFA',
+              transition: 'all 0.15s ease-out',
+              resize: 'vertical'
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = '#0A0A0A'
+              e.currentTarget.style.background = '#FFFFFF'
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(10, 10, 10, 0.05)'
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.1)'
+              e.currentTarget.style.background = '#FAFAFA'
+              e.currentTarget.style.boxShadow = 'none'
             }}
           />
           <button 
             onClick={saveNotes}
             style={{
-              marginTop: '10px',
-              padding: '12px 30px',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              marginTop: '0.75rem',
+              padding: '0.625rem 1.25rem',
+              background: '#0A0A0A',
               color: 'white',
               border: 'none',
-              borderRadius: '12px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer'
+              borderRadius: '6px',
+              fontSize: '0.875rem',
+              fontWeight: '500',
+              cursor: 'pointer',
+              letterSpacing: '-0.01em',
+              transition: 'all 0.15s ease-out',
+              fontFamily: 'inherit'
             }}
+            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
           >
             Save Notes
           </button>
