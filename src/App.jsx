@@ -376,7 +376,7 @@ function HomePage() {
         <div className="cta-content">
           <h2 className="cta-title">Stop repeating yourself. Start healing better.</h2>
           <p className="cta-description">
-            Join 30+ doctors already inside using Amma to save time, reduce callbacks, 
+            Join 30+ clinicians inside using Amma to save time, reduce callbacks, 
             and help patients actually follow through on their care.
           </p>
           <button className="cta-button" onClick={scrollToDemoForm}>Book Your Demo →</button>
