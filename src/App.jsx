@@ -164,23 +164,19 @@ function HomePage() {
         <div className="feature-showcase">
           <div className="feature-large">
             <div className="feature-visual">
-              <video 
-                autoPlay 
-                loop 
-                muted 
-                playsInline
-                className="feature-video"
-              >
-                <source src="/images/20251121_0810_01kakjqdsse5jb6f3mdz9p3j0t.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+              <img 
+                src="/images/ai-avatars.png"
+                alt="Pre-Op & Post-Op Explainer Videos with AI Avatars"
+                className="feature-image"
+              />
             </div>
             <div className="feature-text">
-              <h3>Instant Personalized Videos</h3>
+              <h3>Pre-Op & Post-Op Explainer Videos</h3>
               <p>
-                Upload clinical notes or select a diagnosis, and Amma instantly generates 
-                hyper-personalized animated videos. Each video explains the condition and 
-                treatment in plain language tailored to your patient's specific situation.
+                Generate personalized pre-operative and post-operative videos featuring AI avatars 
+                that explain procedures, expectations, and recovery steps in plain language. 
+                Each video is tailored to your patient's specific surgery and condition, ensuring 
+                they feel informed and prepared every step of the way.
               </p>
             </div>
           </div>
@@ -188,17 +184,18 @@ function HomePage() {
           <div className="feature-large reverse">
             <div className="feature-visual">
               <img 
-                src="/images/Screenshot 2025-11-21 at 5.50.24 PM.png"
-                alt="Daily Follow-Up Animations"
+                src="/images/ai-doctor-conversation.png"
+                alt="Conversational AI Doctor Persona"
                 className="feature-image"
               />
             </div>
             <div className="feature-text">
-              <h3>Daily Follow-Up Animations</h3>
+              <h3>Conversational AI Doctor Persona</h3>
               <p>
-                After the visit, patients receive daily bite-sized animations through the paired 
-                mobile app. Each animation guides medications, exercises, and follow-ups step-by-step, 
-                ensuring patients actually stick to their recovery plan.
+                Your patients get 24/7 access to an AI doctor persona that answers their questions 
+                in real-time through natural conversation. The AI understands their medical history, 
+                explains treatment plans, addresses concerns, and provides guidance—all while maintaining 
+                your practice's voice and clinical standards.
               </p>
             </div>
           </div>
