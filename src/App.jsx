@@ -86,7 +86,7 @@ function HomePage() {
               <div className="stat-label">shorter appointments</div>
             </div>
             <div className="stat">
-              <div className="stat-number">100+</div>
+              <div className="stat-number">30+</div>
               <div className="stat-label">clinicians inside</div>
             </div>
             <div className="stat">
